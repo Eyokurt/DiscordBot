@@ -11,7 +11,7 @@ logs/
 # IDE
 .vscode/
 .idea/
-
+PROJECT_MEMORY.md
 # OS
 Thumbs.db
 .DS_Store
