@@ -45,6 +45,9 @@ CREATE TABLE IF NOT EXISTS guild_settings (
     mod_log_channel_id  INTEGER,
     auto_role_id    INTEGER,
     music_volume    INTEGER DEFAULT 50,
+    unregistered_role_id INTEGER,
+    registered_role_id   INTEGER,
+    staff_role_id        INTEGER,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -119,6 +122,14 @@ class Database:
         self._async_conn = await aiosqlite.connect(self.db_path)
         self._async_conn.row_factory = aiosqlite.Row
         await self._async_conn.executescript(SCHEMA_SQL)
+        
+        # Migrations for new columns
+        for col in ["unregistered_role_id", "registered_role_id", "staff_role_id"]:
+            try:
+                await self._async_conn.execute(f"ALTER TABLE guild_settings ADD COLUMN {col} INTEGER")
+            except sqlite3.OperationalError:
+                pass
+
         await self._async_conn.commit()
         log.info("Database initialized (async): %s", self.db_path)
 
@@ -154,6 +165,14 @@ class Database:
         self._sync_conn = sqlite3.connect(self.db_path)
         self._sync_conn.row_factory = sqlite3.Row
         self._sync_conn.executescript(SCHEMA_SQL)
+
+        # Migrations for new columns
+        for col in ["unregistered_role_id", "registered_role_id", "staff_role_id"]:
+            try:
+                self._sync_conn.execute(f"ALTER TABLE guild_settings ADD COLUMN {col} INTEGER")
+            except sqlite3.OperationalError:
+                pass
+
         self._sync_conn.commit()
         log.info("Database initialized (sync): %s", self.db_path)
 
@@ -200,6 +219,7 @@ class Database:
             "prefix", "language", "welcome_channel_id", "welcome_message",
             "goodbye_channel_id", "goodbye_message", "dj_role_id",
             "mod_log_channel_id", "auto_role_id", "music_volume",
+            "unregistered_role_id", "registered_role_id", "staff_role_id",
         }
         if key not in allowed:
             raise ValueError(f"Invalid setting key: {key}")
@@ -230,6 +250,7 @@ class Database:
             "prefix", "language", "welcome_channel_id", "welcome_message",
             "goodbye_channel_id", "goodbye_message", "dj_role_id",
             "mod_log_channel_id", "auto_role_id", "music_volume",
+            "unregistered_role_id", "registered_role_id", "staff_role_id",
         }
         if key not in allowed:
             raise ValueError(f"Invalid setting key: {key}")
