@@ -1,0 +1,22 @@
+# ============================================================================
+# Discord Bot — Dependencies
+# ============================================================================
+
+# Discord
+discord.py>=2.3.0
+
+# ZeroMQ
+pyzmq>=25.0.0
+
+# Config & Environment
+python-dotenv>=1.0.0
+PyYAML>=6.0
+
+# Database
+aiosqlite>=0.19.0
+
+# Music (optional — install when music service is needed)
+# yt-dlp>=2024.0.0
+
+# Utilities
+msgpack>=1.0.0

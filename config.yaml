@@ -1,0 +1,33 @@
+# ============================================================================
+# Discord Bot — Global Configuration
+# ============================================================================
+
+bot:
+  prefix: "!"
+  default_language: "tr"
+  owner_ids: []                    # Bot sahibi ID'leri (admin komutları için)
+
+zmq:
+  host: "127.0.0.1"
+  pub_port: 5555                   # Broker PUB — servisler SUB ile dinler
+  pull_port: 5556                  # Broker PULL — servisler PUSH ile gönderir
+
+services:
+  music:
+    enabled: true
+    max_queue_size: 100
+    default_volume: 50             # 0-100 arası
+  database:
+    enabled: true
+    path: "data/bot.db"
+
+logging:
+  level: "INFO"
+  dir: "logs"
+  file: "bot.log"
+  max_bytes: 5242880              # 5 MB
+  backup_count: 3
+
+orchestrator:
+  watchdog_interval: 2             # saniye
+  max_restarts_per_min: 5
