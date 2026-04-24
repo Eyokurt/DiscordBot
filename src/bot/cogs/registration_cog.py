@@ -274,8 +274,23 @@ class QueryModal(discord.ui.Modal, title="Kullanıcı Sorgula"):
         # Check warnings via DB service
         msg = make_request("GET_WARNINGS", guild_id=interaction.guild.id, data={"target_user_id": member.id})
         resp = await self.cog.bot.request(Topic.DB, msg, timeout=5.0)
-        warn_count = len(resp.data.get("warnings", [])) if resp and resp.data else 0
-        embed.add_field(name="Uyarı Sayısı", value=str(warn_count), inline=False)
+        
+        warn_count = 0
+        if resp and resp.data:
+            warnings_list = resp.data.get("warnings", [])
+            warn_count = len(warnings_list)
+            embed.add_field(name="Uyarı Sayısı", value=str(warn_count), inline=False)
+            if warn_count > 0:
+                warn_text = ""
+                for i, w in enumerate(warnings_list[:5], 1): # Son 5 uyarı
+                    date_str = w.get('created_at', '?')[:10]
+                    reason = w.get('reason', 'Sebep yok')
+                    warn_text += f"`{date_str}`: {reason}\n"
+                if warn_count > 5:
+                    warn_text += f"...ve {warn_count - 5} uyarı daha"
+                embed.add_field(name="Son Uyarılar", value=warn_text, inline=False)
+        else:
+            embed.add_field(name="Uyarı Sayısı", value="0", inline=False)
         
         await interaction.followup.send(embed=embed, ephemeral=True)
 

@@ -70,6 +70,8 @@ CREATE TABLE IF NOT EXISTS warnings (
     user_id     INTEGER NOT NULL,
     mod_id      INTEGER NOT NULL,
     reason      TEXT NOT NULL,
+    message_link TEXT,
+    message_content TEXT,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -129,6 +131,16 @@ class Database:
                 await self._async_conn.execute(f"ALTER TABLE guild_settings ADD COLUMN {col} INTEGER")
             except sqlite3.OperationalError:
                 pass
+                
+        try:
+            await self._async_conn.execute("ALTER TABLE warnings ADD COLUMN message_link TEXT")
+        except sqlite3.OperationalError:
+            pass
+            
+        try:
+            await self._async_conn.execute("ALTER TABLE warnings ADD COLUMN message_content TEXT")
+        except sqlite3.OperationalError:
+            pass
 
         await self._async_conn.commit()
         log.info("Database initialized (async): %s", self.db_path)
@@ -172,6 +184,16 @@ class Database:
                 self._sync_conn.execute(f"ALTER TABLE guild_settings ADD COLUMN {col} INTEGER")
             except sqlite3.OperationalError:
                 pass
+                
+        try:
+            self._sync_conn.execute("ALTER TABLE warnings ADD COLUMN message_link TEXT")
+        except sqlite3.OperationalError:
+            pass
+            
+        try:
+            self._sync_conn.execute("ALTER TABLE warnings ADD COLUMN message_content TEXT")
+        except sqlite3.OperationalError:
+            pass
 
         self._sync_conn.commit()
         log.info("Database initialized (sync): %s", self.db_path)

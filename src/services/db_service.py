@@ -126,10 +126,11 @@ class DBService(BaseWorker):
         user_id = msg.data.get("target_user_id")
         mod_id = msg.user_id or msg.data.get("mod_id")
         reason = msg.data.get("reason", "Sebep belirtilmedi")
+        message_content = msg.data.get("message_content")
 
         self.db.execute_sync(
-            "INSERT INTO warnings (guild_id, user_id, mod_id, reason) VALUES (?, ?, ?, ?)",
-            (guild_id, user_id, mod_id, reason),
+            "INSERT INTO warnings (guild_id, user_id, mod_id, reason, message_content) VALUES (?, ?, ?, ?, ?)",
+            (guild_id, user_id, mod_id, reason, message_content),
         )
 
         # Get updated warning count

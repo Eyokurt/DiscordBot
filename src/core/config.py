@@ -56,6 +56,7 @@ DISCORD_GUILD_ID: int | None = (
 BOT_PREFIX: str = _get("bot", "prefix", "!")
 BOT_LANGUAGE: str = _get("bot", "default_language", "tr")
 BOT_OWNER_IDS: list[int] = _get("bot", "owner_ids", [])
+BOT_WARNING_DELETE_DELAY: int = int(_get("bot", "warning_delete_delay", 10))
 
 # ============================================================================
 # ZEROMQ

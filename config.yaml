@@ -6,6 +6,7 @@ bot:
   prefix: "!"
   default_language: "tr"
   owner_ids: []                    # Bot sahibi ID'leri (admin komutları için)
+  warning_delete_delay: 10         # Bilgilendirme mesajlarının silinme süresi
 
 zmq:
   host: "127.0.0.1"
